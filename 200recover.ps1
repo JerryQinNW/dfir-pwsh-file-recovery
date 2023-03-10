@@ -62,10 +62,8 @@ try {
     $recoverySummaryContent += "Recovered Word Documents`r`n"
     $recoverySummaryContent += "========================`r`n"
     $recoverySummaryContent += "`r`n"
-    Write-Output("$recoverySummaryContent")
 
     foreach ($file in $wordDeletedFiles) {
-        Write-Output("Processing: $file ")
         $wordDoc = $word.Documents.Open($file.FullName, $false, $true)
         if ($null -ne $wordDoc) { 
             $text = $wordDoc.Content.Text
@@ -76,7 +74,6 @@ try {
         $recoverySummaryContent += "$file`r`n`r`n"
         $recoverySummaryContent += "CONTENT:`r`n"
         $recoverySummaryContent += "$text`r`n`r`n"
-        Write-Output("$recoverySummaryContent")
         $destinationPath = Join-Path $recoveredFilesPath $file.Name
         if (!(Test-Path $destinationPath)) {
             Copy-Item $file.FullName $destinationPath -Force
@@ -87,15 +84,12 @@ try {
     $recoverySummaryContent += "Recovered Excel Documents`r`n"
     $recoverySummaryContent += "=========================`r`n"
     $recoverySummaryContent += "`r`n"
-    Write-Output("$recoverySummaryContent")
 
     foreach ($file in $wordDeletedFiles) {
-        Write-Output("Processing: $file ")
         $workbook = $excel.Workbooks.Open($newName, $false, $true)
         if ($null -ne $workbook) {
             $worksheet = $workbook.Worksheets.Item(1)
             $text = $worksheet.Cells.Item(1, 1).Value.ToString()
-            Write-Output("Recovered: $file ")
             $workbook.Close()
         }
         $recoverySummaryContent += "RECOVERED: $($file.Name)`r`n`r`n"
@@ -103,7 +97,6 @@ try {
         $recoverySummaryContent += "$file`r`n`r`n"
         $recoverySummaryContent += "CONTENT:`r`n"
         $recoverySummaryContent += "$text`r`n`r`n"
-        Write-Output("Write: $recoverySummaryContent")
         $destinationPath = Join-Path $recoveredFilesPath $file.Name
         if (!(Test-Path $destinationPath)) {
             Copy-Item $file.FullName $destinationPath -Force
@@ -127,15 +120,10 @@ finally {
     [System.GC]::WaitForPendingFinalizers()
 }
 
-# Create a summary file with the names of all recovered files and save it in the report directory
 $summaryFileName = "RecoverySummary$(Get-Date -Format 'yyyyMMdd').txt"
 $summaryFilePath = Join-Path $currentDir $reportFolder $summaryFileName
-#$summaryContent = Get-ChildItem -Path $recoveredFilesPath -Filter "*.docx" | Select-Object -ExpandProperty Name
-#$summaryContent = Get-ChildItem -Path $recoveredFilesPath  | Select-Object -ExpandProperty Name
 Set-Content -Path $summaryFilePath -Value $recoverySummaryContent
 Write-Output("Created summary file: $summaryFilePath")
 
-    $destinationPath = Join-Path $recoveredFilesPath $file.Name
-    Copy-Item $file.FullName $destinationPath -Force
-
-
+$destinationPath = Join-Path $recoveredFilesPath $file.Name
+Copy-Item $file.FullName $destinationPath -Force

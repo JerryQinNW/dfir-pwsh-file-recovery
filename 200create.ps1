@@ -121,10 +121,10 @@ try {
   $targetFolder2 = Join-Path $evidencePath "vault"
 
   Get-ChildItem -Path $targetFolder1 -Directory | ForEach-Object {
-      # Delete immediate children and the folder
-      Get-ChildItem $_.FullName | Remove-Item -Force
-      Remove-Item $_.FullName  -Force
-      Write-Output "Folder '$($_.FullName)' deleted."
+    # Delete immediate children and the folder
+    Get-ChildItem $_.FullName | Remove-Item -Force
+    Remove-Item $_.FullName  -Force
+    Write-Output "Folder '$($_.FullName)' deleted."
   }
 
   Get-ChildItem -Path $targetFolder2 -Directory | ForEach-Object {
@@ -132,7 +132,7 @@ try {
     Get-ChildItem $_.FullName | Remove-Item -Force
     Remove-Item $_.FullName  -Force
     Write-Output "Folder '$($_.FullName)' deleted."
-}
+  }
 
   Remove-Item -Path $targetFolder1 -Recurse -Force -ErrorAction SilentlyContinue
   Remove-Item -Path $targetFolder2 -Recurse -Force -ErrorAction SilentlyContinue
